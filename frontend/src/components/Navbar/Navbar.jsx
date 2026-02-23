@@ -5,12 +5,40 @@ import { Link, useNavigate } from 'react-router-dom'
 import { StoreContext } from '../../Context/StoreContext'
 import cartImage from '../../../src/Assets1/basket.webp'
 import profileImage from '../../../src/Assets1/profile_1.jpg'
+import axios from 'axios'
+import { FaBell } from 'react-icons/fa'
 
-const Navbar = ({ setShowLogin, setShowSupport, setShowLatestProducts, setLatestPopupCategory, setShowNotifications }) => {
+const Navbar = ({ setShowLogin, setShowSupport, setShowLatestProducts, setLatestPopupCategory, setShowNotifications, showNotifications }) => {
 
   const [menu, setMenu] = useState("home");
+  const [unreadCount, setUnreadCount] = useState(0);
   const { getTotalCartAmount, token, setToken, userData, url, profileImagePreview, menu_list, product_list, setSelectedCategory } = useContext(StoreContext);
   const navigate = useNavigate();
+
+  // ---- Poll orders every 30s to update unread notification count ----
+  useEffect(() => {
+    if (!token) { setUnreadCount(0); return; }
+
+    const fetchUnreadCount = async () => {
+      try {
+        const res = await axios.post(url + "/api/order/userorders", {}, { headers: { token } });
+        if (res.data.success) {
+          const orders = res.data.data || [];
+          // Count status-change notifications (delivered, out for delivery, cancelled)
+          const count = orders.filter(o =>
+            o.status.toLowerCase() === 'delivered' ||
+            o.status.toLowerCase().includes('out') ||
+            o.status.toLowerCase().includes('cancelled')
+          ).length + orders.length; // + 1 per order placed
+          setUnreadCount(count);
+        }
+      } catch (e) { }
+    };
+
+    fetchUnreadCount();
+    const interval = setInterval(fetchUnreadCount, 30000);
+    return () => clearInterval(interval);
+  }, [token]);
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -116,6 +144,20 @@ const Navbar = ({ setShowLogin, setShowSupport, setShowLatestProducts, setLatest
           {getTotalCartAmount() > 0 && <span className="cart-badge"></span>}
         </Link>
 
+        {/* Notification Bell */}
+        {token && (
+          <button
+            className={`navbar-bell ${unreadCount > 0 ? 'navbar-bell--active' : ''}`}
+            onClick={() => { setShowNotifications(prev => !prev); setUnreadCount(0); }}
+            title="Notifications"
+          >
+            <FaBell />
+            {unreadCount > 0 && (
+              <span className="bell-badge">{unreadCount > 9 ? '9+' : unreadCount}</span>
+            )}
+          </button>
+        )}
+
         {/* Profile / Guard */}
         {!token ? (
           <button className="signin-btn" onClick={() => setShowLogin(true)}>
@@ -131,6 +173,11 @@ const Navbar = ({ setShowLogin, setShowSupport, setShowLatestProducts, setLatest
               />
             </div>
             <ul className='navbar-profile-dropdown'>
+              <li onClick={() => { setShowNotifications(prev => !prev); setUnreadCount(0); }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>
+                <span>Notifications</span>
+                {unreadCount > 0 && <span className="dropdown-notif-badge">{unreadCount > 9 ? '9+' : unreadCount}</span>}
+              </li>
               <li onClick={() => navigate('/settings')}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                 <span>Settings</span>

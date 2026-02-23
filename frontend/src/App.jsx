@@ -51,6 +51,7 @@ const App = () => {
       setShowLatestProducts={setShowLatestProducts}
       setLatestPopupCategory={setLatestPopupCategory}
       setShowNotifications={setShowNotifications}
+      showNotifications={showNotifications}
     />
       <div className='app'>
         {/* <Navbar setShowLogin={setShowLogin}/> */}
