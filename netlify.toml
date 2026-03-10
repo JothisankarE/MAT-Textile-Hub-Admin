@@ -1,6 +1,7 @@
 [build]
-  command = "cd admin && npm install && npm run build"
-  publish = "admin/dist"
+  base = "admin"
+  command = "npm install && npm run build"
+  publish = "dist"
 
 [[redirects]]
   from = "/*"

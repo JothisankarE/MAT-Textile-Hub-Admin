@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "install-admin": "npm --prefix admin install",
-    "build": "npm --prefix admin install && npm --prefix admin run build",
+    "build": "cd admin && npm install && npm run build",
     "dev": "npm --prefix admin run dev",
     "start": "npm --prefix admin run preview"
   }
