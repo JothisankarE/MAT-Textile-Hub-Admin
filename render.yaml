@@ -1,3 +1,4 @@
+# Updated deployment config
 services:
   - type: web
     name: mat-textile-hub-admin
