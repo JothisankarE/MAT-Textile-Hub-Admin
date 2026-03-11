@@ -7,6 +7,8 @@
     "dev:frontend": "npm --prefix apps/frontend run dev",
     "dev:admin": "npm --prefix apps/admin run dev",
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run dev:admin\"",
+    "build:frontend": "npm --prefix apps/frontend run build",
+    "build": "npm run build:frontend",
     "start": "npm --prefix apps/backend start"
   },
   "devDependencies": {

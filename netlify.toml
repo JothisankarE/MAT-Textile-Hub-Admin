@@ -4,7 +4,7 @@
   publish = "dist"
 
 [build.environment]
-  VITE_BACKEND_URL = "https://textuser-ecom.onrender.com"
+  VITE_BACKEND_URL = "https://mat-textile-hub-admin.onrender.com"
 
 [[redirects]]
   from = "/*"
