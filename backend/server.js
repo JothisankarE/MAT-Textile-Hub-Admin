@@ -16,6 +16,7 @@ require('dotenv/config');
 const cartRouter = require("./routes/cartRoute.js");
 const orderRouter = require("./routes/orderRoute.js");
 const chatRouter = require("./routes/chatRoute.js");
+const path = require('path');
 
 // app config
 const app = express()
@@ -36,7 +37,10 @@ app.use("/api/cart", cartRouter)
 app.use("/api/order", orderRouter)
 app.use("/api/chat", chatRouter)
 
-app.get("/", (req, res) => {
+// Serve static files from the admin panel dist folder
+app.use(express.static(path.join(__dirname, '../admin/dist')));
+
+app.get("/api-docs", (req, res) => {
   res.send(`
 <!DOCTYPE html>
 <html lang="en">
@@ -279,6 +283,11 @@ app.get("/", (req, res) => {
 </body>
 </html>
   `);
+});
+
+// Catch-all route to serve the admin panel's index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../admin/dist', 'index.html'));
 });
 
 app.listen(port, () => console.log(`Server started on port ${port}`))
