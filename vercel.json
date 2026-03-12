@@ -5,7 +5,7 @@
   "outputDirectory": "dist",
   "framework": "vite",
   "redirects": [
-    { "source": "/admin", "destination": "/admin/", "permanent": true }
+    { "source": "/admin", "destination": "/admin", "permanent": true }
   ],
   "rewrites": [
 
