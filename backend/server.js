@@ -94,4 +94,8 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, message: "Internal Server Error" });
 });
 
-app.listen(port, () => console.log(`Server started on port ${port}`))
+if (require.main === module) {
+  app.listen(port, () => console.log(`Server started on port ${port}`))
+}
+
+module.exports = app;
