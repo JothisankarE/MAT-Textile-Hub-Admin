@@ -9,7 +9,9 @@
 
 const express = require("express");
 const cors = require('cors');
+const mongoose = require('mongoose');
 const connectDB = require("./config/db.js");
+
 const userRouter = require("./routes/userRoute.js");
 const foodRouter = require("./routes/productRoute.js");
 require('dotenv/config');
