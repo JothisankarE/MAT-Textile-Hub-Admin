@@ -12,9 +12,7 @@ const productRouter = express.Router();
 //Image Storage Engine (Saving Image to uploads folder & rename it)
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, process.env.VERCEL ? '/tmp' : 'uploads');
-    },
+    destination: 'uploads',
     filename: (req, file, cb) => {
         return cb(null, `${Date.now()}${file.originalname}`);
     }

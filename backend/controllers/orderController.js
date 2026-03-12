@@ -42,8 +42,8 @@ const { sendOrderConfirmationEmail } = require('../utlis/sendEmail');
 
 
 //           const session = await stripe.checkout.sessions.create({
-//             success_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/verify?success=true&orderId=${newOrder._id}`,
-//             cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/verify?success=false&orderId=${newOrder._id}`,
+//             success_url: `http://localhost:5173/verify?success=true&orderId=${newOrder._id}`,
+//             cancel_url: `http://localhost:5173/verify?success=false&orderId=${newOrder._id}`,
 //             line_items: line_items,
 //             mode: 'payment',
 //           });
@@ -131,15 +131,15 @@ const placeOrder = async (req, res) => {
           product_data: {
             name: 'Delivery Charge',
           },
-          unit_amount: 50 * 100, // INR 50.00 - Stripe has a minimum amount (~₹40)
+          unit_amount: 5,
         },
         quantity: 1,
       });
 
       // Create the Stripe Checkout session
       const session = await stripe.checkout.sessions.create({
-        success_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/verify?success=true&orderId=${newOrder._id}`,
-        cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/verify?success=false&orderId=${newOrder._id}`,
+        success_url: `http://localhost:5173/verify?success=true&orderId=${newOrder._id}`,
+        cancel_url: `http://localhost:5173/verify?success=false&orderId=${newOrder._id}`,
         line_items: line_items,
         mode: 'payment',
         customer_email: req.body.address.email,
@@ -151,13 +151,8 @@ const placeOrder = async (req, res) => {
       res.json({ success: true, session_url: session.url });
     }
   } catch (error) {
-    console.error("❌ Order placement error:", {
-      message: error.message,
-      stack: error.stack,
-      paymentMethod: req.body.paymentMethod,
-      amount: req.body.amount
-    });
-    res.json({ success: false, message: error.message || 'Error' });
+    console.log(error);
+    res.json({ success: false, message: 'Error' });
   }
 };
 
@@ -329,7 +324,7 @@ const generateInvoice = async (req, res) => {
 
     doc.pipe(res);
 
-    const logoPath = path.join(__dirname, '../assets/mat_logo.png');
+    const logoPath = path.join(__dirname, '../../frontend/src/assets/mat_logo.png');
 
     // Design Colors
     const primaryColor = '#e74c3c'; // Red

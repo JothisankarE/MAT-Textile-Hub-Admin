@@ -6,7 +6,7 @@ export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
 
-    const url = import.meta.env.VITE_BACKEND_URL !== undefined ? import.meta.env.VITE_BACKEND_URL : "https://mat-textile-hub-admin.onrender.com"
+    const url = import.meta.env.VITE_API_URL || "http://localhost:4000"
     const [product_list, setProductList] = useState([]);
     const [cartItems, setCartItems] = useState({});
     const [token, setToken] = useState("")

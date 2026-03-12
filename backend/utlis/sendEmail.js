@@ -110,7 +110,7 @@ const generateInvoiceBuffer = (order) => {
             .text(`INVOICE NO: ${order._id.toString().slice(-6).toUpperCase()}`, 400, 100, { align: 'right' });
 
         // Logo
-        const logoPath = path.join(__dirname, '../assets/mat_logo.png');
+        const logoPath = path.join(__dirname, '../../frontend/src/assets/mat_logo.png');
         if (fs.existsSync(logoPath)) {
             doc.image(logoPath, 470, 120, { width: 80 });
         }

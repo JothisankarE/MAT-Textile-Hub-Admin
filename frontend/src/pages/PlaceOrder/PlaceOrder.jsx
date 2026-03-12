@@ -186,7 +186,7 @@ import './PlaceOrder.css';
 import UPIPaymentPopup from '../../components/UPIPaymentPopup/UPIPaymentPopup';
 import PageLoader from '../../components/PageLoader/PageLoader';
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_51P5LmBSAiWvaX8MZviUgOKLw5TAcK6uGvYq1yTXhb9MnPWWjRfiPymGzW0cg61mFItd7Wrowucvzz5WfDIhWvCH600SXFCoCo8'); // Using environment variable with hardcoded fallback for local testing
+const stripePromise = loadStripe('pk_test_51RZ6c3IVGqwMOpBw96Dqy9amuhGmLpgwqZHL1yuQp3h2RnVZvvxWbReKD6MtFUjLpunOYF6OZr9Ig7xKe1ZsKsvA00ga3EBgAI'); // Use your actual Stripe publishable key here
 
 const PlaceOrder = () => {
   const [data, setData] = useState({
@@ -269,8 +269,9 @@ const PlaceOrder = () => {
     });
 
     const orderData = {
+      userId: 'USER_ID', // Replace with the actual user ID
       items: orderItems,
-      amount: getTotalCartAmount() + 50, // Include delivery fee (Sync with backend)
+      amount: getTotalCartAmount() + 5, // Include delivery fee
       address: data, // The address data collected from the form
       paymentMethod: method,
       upiId: method === 'upi' ? data.upiId : '', // Include UPI ID if UPI payment
@@ -307,7 +308,7 @@ const PlaceOrder = () => {
       } else {
         setIsProcessing(false);
         isSubmittingRef.current = false;
-        toast.error(result.message || 'Error placing the order. Please try again.');
+        toast.error('Error placing the order. Please try again.');
       }
     } catch (error) {
       setIsProcessing(false);
@@ -409,12 +410,12 @@ const PlaceOrder = () => {
                 <hr />
                 <div className='cart-total-details'>
                   <p>Delivery Fee</p>
-                  <p>₹{getTotalCartAmount() === 0 ? 0 : 50}</p>
+                  <p>₹{getTotalCartAmount() === 0 ? 0 : 5}</p>
                 </div>
                 <hr />
                 <div className='cart-total-details'>
                   <b>Total</b>
-                  <b>₹{getTotalCartAmount() + 50}</b>
+                  <b>₹{getTotalCartAmount() + 5}</b>
                 </div>
               </div>
             </div>
