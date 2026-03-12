@@ -98,7 +98,9 @@ const placeOrder = async (req, res) => {
     // Handle different payment methods
     if (paymentMethod === 'cod') {
       // Cash on Delivery - Order placed successfully, send confirmation email after 30 seconds
-      setTimeout(() => { sendOrderConfirmationEmail(newOrder); }, 30000);
+      // Cash on Delivery - Order placed successfully, send confirmation email immediately
+      sendOrderConfirmationEmail(newOrder); 
+
       res.json({
         success: true,
         message: 'Order placed successfully! Payment will be collected on delivery.',
@@ -261,8 +263,9 @@ const verifyOrder = async (req, res) => {
       const updatedOrder = await orderModel.findByIdAndUpdate(orderId, { payment: true }, { new: true });
       // Send confirmation email 30 seconds after successful payment verification (Stripe & UPI)
       if (updatedOrder) {
-        setTimeout(() => { sendOrderConfirmationEmail(updatedOrder); }, 30000);
+        sendOrderConfirmationEmail(updatedOrder);
       }
+
       res.json({ success: true, message: "Paid" })
     }
     else {

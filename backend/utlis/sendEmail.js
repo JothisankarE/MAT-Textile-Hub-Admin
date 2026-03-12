@@ -6,6 +6,7 @@ const fs = require('fs');
 const createTransporter = async () => {
     // If SMTP credentials are provided, use them. Otherwise fall back to ethereal test account.
     if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+        console.log("Using primary SMTP configuration for:", process.env.SMTP_USER);
         return nodemailer.createTransport({
             host: process.env.SMTP_HOST || 'smtp.gmail.com',
             port: process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : 465,
@@ -16,6 +17,7 @@ const createTransporter = async () => {
             },
         });
     } else {
+        console.log("⚠️ SMTP_USER/SMTP_PASS missing. Falling back to Ethereal test account...");
         // create a test account (ethereal) for development if real SMTP not configured
         const testAccount = await nodemailer.createTestAccount();
         return nodemailer.createTransport({
@@ -29,6 +31,7 @@ const createTransporter = async () => {
         });
     }
 };
+
 
 exports.sendConfirmationEmail = async (email, confirmationUrl) => {
     const transporter = await createTransporter();

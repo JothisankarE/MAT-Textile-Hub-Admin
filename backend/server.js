@@ -52,10 +52,13 @@ app.get("/api/health", (req, res) => {
     env: {
       hasMongoUri: !!process.env.MONGODB_URI,
       hasJwtSecret: !!process.env.JWT_SECRET,
+      hasSmtpUser: !!process.env.SMTP_USER,
+      hasSmtpPass: !!process.env.SMTP_PASS,
       nodeEnv: process.env.NODE_ENV
     }
   });
 });
+
 
 // Global Error Handler
 app.use((err, req, res, next) => {
